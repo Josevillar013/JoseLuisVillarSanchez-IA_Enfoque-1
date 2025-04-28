@@ -54,3 +54,4 @@ if __name__ == "__main__":
     start_node = 'A'
     recorrido = g.bfs(start_node)
     print(f"Orden de visita en BFS desde '{start_node}': {recorrido}")
+
