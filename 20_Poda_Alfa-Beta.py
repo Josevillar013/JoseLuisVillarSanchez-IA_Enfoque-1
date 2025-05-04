@@ -9,28 +9,37 @@ def alpha_beta(node, depth, alpha, beta, maximizing_player):
     - maximizing_player: True si es el turno del jugador maximizador, False para el minimizador.
     Retorna el valor minimax con poda alfa-beta.
     """
-    # Caso base: nodo hoja (entero) o profundidad agotada
+    # Caso base: si la profundidad es 0 o el nodo es una hoja (valor numérico)
     if depth == 0 or not isinstance(node, list):
-        return node
+        return node  # Devuelve el valor del nodo (hoja) en el árbol
 
     if maximizing_player:
+        # Si es el turno del jugador maximizador, inicializamos el valor con -infinito
         value = -math.inf
         for child in node:
+            # Evaluamos cada hijo del nodo actual recursivamente con poda alfa-beta
             value = max(value, alpha_beta(child, depth-1, alpha, beta, False))
+            # Actualizamos el valor de alpha, que es el valor máximo encontrado hasta el momento
             alpha = max(alpha, value)
+            # Poda beta: si alpha >= beta, ya no necesitamos explorar más hijos
             if alpha >= beta:
-                # Poda beta: ya no interesa explorar más hijos
-                break
-        return value
+                break  # Salimos del ciclo ya que no vale la pena seguir explorando
+
+        return value  # Retorna el valor máximo encontrado
+
     else:
+        # Si es el turno del jugador minimizador, inicializamos el valor con +infinito
         value = math.inf
         for child in node:
+            # Evaluamos cada hijo del nodo actual recursivamente con poda alfa-beta
             value = min(value, alpha_beta(child, depth-1, alpha, beta, True))
+            # Actualizamos el valor de beta, que es el valor mínimo encontrado hasta el momento
             beta = min(beta, value)
+            # Poda alfa: si beta <= alpha, ya no necesitamos explorar más hijos
             if beta <= alpha:
-                # Poda alfa: no interesa explorar más hijos
-                break
-        return value
+                break  # Salimos del ciclo ya que no vale la pena seguir explorando
+
+        return value  # Retorna el valor mínimo encontrado
 
 if __name__ == "__main__":
     # Ejemplo de árbol de juego (3 niveles de profundidad):
@@ -48,11 +57,12 @@ if __name__ == "__main__":
 
     # Ejecutar alpha-beta desde la raíz
     best_value = alpha_beta(
-        node=game_tree,
-        depth=3,
-        alpha=-math.inf,
-        beta=math.inf,
-        maximizing_player=True
+        node=game_tree,  # El árbol de juego
+        depth=3,         # La profundidad máxima del árbol
+        alpha=-math.inf, # Valor inicial de alpha (más bajo posible)
+        beta=math.inf,   # Valor inicial de beta (más alto posible)
+        maximizing_player=True  # Inicia con el jugador maximizador
     )
 
+    # Imprime el valor minimax calculado con poda alfa-beta
     print(f"Valor minimax con poda alfa-beta: {best_value}")

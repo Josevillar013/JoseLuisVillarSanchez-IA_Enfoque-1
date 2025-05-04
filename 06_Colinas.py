@@ -1,51 +1,54 @@
-import random
+import random  # Importa el módulo random para generar el estado inicial aleatorio
 
 def hill_climbing(objective, neighbors, initial_state, max_iterations=1000):
     """
-    Algoritmo de búsqueda por colinas (Hill Climbing):
-    - objective: función que toma un estado y devuelve su valor (a maximizar).
-    - neighbors: función que toma un estado y devuelve una lista de estados vecinos.
-    - initial_state: estado inicial para comenzar la búsqueda.
-    - max_iterations: número máximo de iteraciones.
-    Retorna el mejor estado encontrado y su valor.
+    Algoritmo de Hill Climbing (ascenso por colinas):
+    - objective: función objetivo que se quiere maximizar.
+    - neighbors: función que genera los vecinos de un estado dado.
+    - initial_state: el estado desde el que se inicia la búsqueda.
+    - max_iterations: tope de iteraciones para evitar bucles infinitos.
+    Retorna el mejor estado encontrado junto con su valor.
     """
-    current = initial_state
-    current_value = objective(current)
+    current = initial_state                      # Estado actual comienza desde el inicial
+    current_value = objective(current)           # Evalúa el valor del estado actual
 
-    for i in range(max_iterations):
-        # Generar vecinos del estado actual
-        nbrs = neighbors(current)
-        # Evaluar valores de vecinos
-        best_neighbor = None
-        best_value = current_value
+    for i in range(max_iterations):              # Bucle de iteraciones controlado por el máximo
+        nbrs = neighbors(current)                # Genera la lista de vecinos del estado actual
+
+        best_neighbor = None                     # Inicializa el mejor vecino
+        best_value = current_value               # El mejor valor empieza siendo el actual
+
+        # Itera sobre los vecinos para encontrar el de mayor valor
         for n in nbrs:
-            val = objective(n)
-            if val > best_value:
+            val = objective(n)                   # Evalúa el valor del vecino
+            if val > best_value:                 # Si mejora el valor actual, actualiza mejor vecino
                 best_value = val
                 best_neighbor = n
 
-        # Si no hay mejora, terminamos
-        if best_neighbor is None:
+        if best_neighbor is None:                # Si no hay mejora, se alcanzó un máximo local
             break
 
-        # Moverse a la mejor vecindad
-        current = best_neighbor
-        current_value = best_value
+        current = best_neighbor                  # Se mueve al mejor vecino
+        current_value = best_value               # Actualiza el valor actual
 
-    return current, current_value
+    return current, current_value                # Retorna el mejor estado encontrado
 
+# BLOQUE PRINCIPAL
 if __name__ == "__main__":
-    # Ejemplo: maximizar f(x) = -(x-3)^2 + 10
+    # Función objetivo: f(x) = -(x-3)^2 + 10 → tiene un máximo en x=3
     def f(x):
         return -(x - 3)**2 + 10
 
+    # Función de vecinos: genera dos vecinos (x-1 y x+1)
     def gen_neighbors(x):
-        # Vecinos: x-1, x+1
         return [x - 1, x + 1]
 
     # Estado inicial aleatorio entre -10 y 10
     init = random.randint(-10, 10)
+
+    # Ejecuta la búsqueda por colinas con hasta 100 iteraciones
     best_state, best_val = hill_climbing(f, gen_neighbors, init, max_iterations=100)
 
+    # Muestra los resultados
     print(f"Estado inicial: {init}")
     print(f"Mejor estado encontrado: {best_state} con valor {best_val}")
